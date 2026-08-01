@@ -8,6 +8,9 @@ on:
         required: true
         default: 'v0.1.0'
 
+permissions:
+  contents: write
+
 jobs:
   build-linux:
     runs-on: ubuntu-22.04
@@ -54,7 +57,11 @@ jobs:
           cp target/release/cyrio-tauri target/release/cyrio-tauri_0.1.0_linux-x86_64
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.event.inputs.tag }}
-          files: target/release/cyrio-tauri_0.1.0_linux-x86_64
+        env:
+          GH_TOKEN: ${{ secrets.CYRIO_CORE_TOKEN }}
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @target/release/cyrio-tauri_0.1.0_linux-x86_64 \
+            "https://uploads.github.com/repos/cyanteam/cyrio/releases/363501979/assets?name=cyrio-tauri_0.1.0_linux-x86_64"
