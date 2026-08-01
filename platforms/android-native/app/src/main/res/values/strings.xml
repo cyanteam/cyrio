@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cyrio</string>
+    <string name="main_activity_title">cyrio</string>
+
+    <!-- 底部导航 -->
+    <string name="tab_songs">歌曲</string>
+    <string name="tab_playlists">歌单</string>
+    <string name="tab_upload">上传传输</string>
+    <string name="tab_device">设备</string>
+    <string name="tab_settings">设置</string>
+    <string name="tab_about">关于</string>
+
+    <!-- 通用 -->
+    <string name="refresh">刷新</string>
+    <string name="loading">加载中…</string>
+    <string name="empty">暂无数据</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="select_all">全选</string>
+    <string name="clear">清空</string>
+    <string name="search">搜索</string>
+    <string name="more">更多</string>
+    <string name="retry">重试</string>
+
+    <!-- 设备 -->
+    <string name="device_not_connected">未连接设备</string>
+    <string name="device_connecting">正在连接…</string>
+    <string name="device_scanning">扫描 Diamond 设备中…</string>
+    <string name="device_connected">已连接 Rio S-Series</string>
+    <string name="device_connect_failed">连接失败</string>
+    <string name="device_disconnect">断开连接</string>
+    <string name="device_connect">连接设备</string>
+
+    <!-- 歌曲 -->
+    <string name="song_count_format">%d 首</string>
+    <string name="add_to_playlist">加入歌单</string>
+    <string name="rename">重命名</string>
+    <string name="repair_encoding">修复编码</string>
+    <string name="download">下载</string>
+    <string name="batch_slug">批量转拼音</string>
+    <string name="batch_strip">批量去词</string>
+
+    <!-- 上传 -->
+    <string name="upload_select_files">选择文件</string>
+    <string name="upload_to_internal">上传到内置存储</string>
+    <string name="upload_to_sd">上传到 SD 卡</string>
+    <string name="upload_apply_slug">应用拼音转换</string>
+    <string name="upload_apply_strip">应用去词</string>
+    <string name="upload_in_progress">正在传输…</string>
+
+    <!-- 存储 -->
+    <string name="storage_internal">内置存储</string>
+    <string name="storage_sd">SD 卡</string>
+    <string name="storage_not_present">未插入</string>
+    <string name="storage_used_format">已用 %1$s / %2$s</string>
+
+    <!-- 关于 -->
+    <string name="about_version">版本</string>
+    <string name="about_description">cyrio 是一个管理 Rio S-Series MP3 播放器的工具，支持歌曲上传、下载、删除、歌单管理、编码修复等功能。</string>
+    <string name="about_features">• 歌曲管理：上传、下载、删除、重命名\n• 歌单管理：创建、编辑、删除歌单\n• 编码修复：自动修复乱码歌曲名\n• 双存储支持：内置存储 + SD 卡\n• 批量操作：全选、批量删除、批量转拼音</string>
+    <string name="about_tech">核心技术：Rust + JNI + Android 原生 Kotlin</string>
+</resources>

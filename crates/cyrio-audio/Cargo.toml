@@ -1,0 +1,30 @@
+[package]
+name = "cyrio-audio"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Audio playback abstraction for cyrio (rodio on desktop, Web Audio on WASM)"
+
+[dependencies]
+async-trait.workspace = true
+thiserror.workspace = true
+log.workspace = true
+serde.workspace = true
+
+# 桌面音频（cpal 底层）
+# 排除 Android：cpal/oboe-sys 在 Android 16 上初始化时可能 native panic，
+# 且 Android 上暂不需要本地音频播放（USB 设备本身有播放能力）
+[target.'cfg(all(not(target_arch = "wasm32"), not(target_os = "android")))'.dependencies]
+rodio.workspace = true
+
+# Web 音频
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys.workspace = true
+js-sys.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+
+[lib]
+name = "cyrio_audio"
+path = "src/lib.rs"

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =========================================================
+         MD3 颜色系统 — 基于 #39C5BB 蓝绿种子色生成
+         Light scheme（浅色模式）
+         ========================================================= -->
+
+    <!-- Primary -->
+    <color name="md_primary">#FF00696B</color>
+    <color name="md_on_primary">#FFFFFFFF</color>
+    <color name="md_primary_container">#FF6FF7EE</color>
+    <color name="md_on_primary_container">#FF002020</color>
+
+    <!-- Secondary -->
+    <color name="md_secondary">#FF4A6363</color>
+    <color name="md_on_secondary">#FFFFFFFF</color>
+    <color name="md_secondary_container">#FFCCE8E5</color>
+    <color name="md_on_secondary_container">#FF051F1F</color>
+
+    <!-- Tertiary -->
+    <color name="md_tertiary">#FF4B607C</color>
+    <color name="md_on_tertiary">#FFFFFFFF</color>
+    <color name="md_tertiary_container">#FFD3E4FF</color>
+    <color name="md_on_tertiary_container">#FF041C35</color>
+
+    <!-- Error -->
+    <color name="md_error">#FFBA1A1A</color>
+    <color name="md_on_error">#FFFFFFFF</color>
+    <color name="md_error_container">#FFFFDAD6</color>
+    <color name="md_on_error_container">#FF410002</color>
+
+    <!-- Surface 层级 -->
+    <color name="md_surface">#FFFBFDFA</color>
+    <color name="md_on_surface">#FF191C1C</color>
+    <color name="md_surface_variant">#FFDAE5E3</color>
+    <color name="md_on_surface_variant">#FF3F4948</color>
+    <color name="md_surface_container_lowest">#FFFFFFFF</color>
+    <color name="md_surface_container_low">#FFF0F4F2</color>
+    <color name="md_surface_container">#FFE9EEEC</color>
+    <color name="md_surface_container_high">#FFE3E9E7</color>
+    <color name="md_surface_container_highest">#FFD7DDDB</color>
+
+    <!-- Outline -->
+    <color name="md_outline">#FF6F7978</color>
+    <color name="md_outline_variant">#FFBEC9C7</color>
+
+    <!-- Background -->
+    <color name="md_background">#FFFBFDFA</color>
+    <color name="md_on_background">#FF191C1C</color>
+
+    <!-- Inverse -->
+    <color name="md_inverse_surface">#FF2D3131</color>
+    <color name="md_inverse_on_surface">#FFEFF1EF</color>
+    <color name="md_inverse_primary">#FF4CDAD2</color>
+
+    <!-- =========================================================
+         品牌色（保留供代码直接引用）
+         ========================================================= -->
+    <color name="rio_blue">#FF39C5BB</color>
+    <color name="rio_blue_light">#FF5DD8D0</color>
+    <color name="rio_blue_subtle">#FFE8F8F7</color>
+    <color name="rio_blue_dark">#FF2A9D96</color>
+
+    <!-- 选中行背景 -->
+    <color name="row_active_bg">#FFE8F8F7</color>
+    <color name="row_checked_bg">#1A39C5BB</color>
+
+    <!-- 底部导航 -->
+    <color name="bottom_nav_bg">#FFFBFDFA</color>
+    <color name="bottom_nav_active">#FF00696B</color>
+    <color name="bottom_nav_inactive">#FF3F4948</color>
+    <color name="bottom_nav_disabled">#FFBEC9C7</color>
+</resources>

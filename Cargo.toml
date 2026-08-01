@@ -1,0 +1,126 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/cyrio-transport-nusb",
+    "crates/cyrio-audio",
+    "crates/cyrio-webdav",
+    "crates/cyrio-app",
+    "crates/cyrio-tauri",
+    "crates/cyrio-jni",
+    "platforms/desktop",
+    "platforms/tauri-desktop",
+    "platforms/gpui-desktop",
+]
+# cyrio-core 和 cyrio-text 已拆分为私有 git 依赖（github.com/cyanteam/cyrio-core）
+# 本地开发时取消下方 [patch] 注释即可使用本地源码
+# WASM crate 暂排除（Phase 7 启用，需解决 web-sys 版本冲突）
+# - crates/cyrio-transport-webusb
+# - platforms/web
+exclude = [
+    "crates/cyrio-core",
+    "crates/cyrio-text",
+    "crates/cyrio-transport-webusb",
+    "platforms/web",
+]
+
+# 工作区级别的共用依赖版本，子 crate 用 `dependency.workspace = true` 引用
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT"
+repository = "https://github.com/cyanteam/cyrio"
+description = "Diamond Rio S-Series MP3 player manager (cross-platform, pure Rust)"
+
+[workspace.dependencies]
+# 异步运行时（用户要求用 smol，不用 tokio）
+smol = "2.0"
+async-channel = "2.3"
+async-trait = "0.1"
+# 错误处理
+thiserror = "1.0"
+# 字节序处理
+byteorder = "1.5"
+# 日志
+log = "0.4"
+# 协议层无外部 CRC 库（自实现 rioutil 兼容算法）
+
+# 桌面 USB（pure Rust，无 C 依赖）
+# 启用 smol feature：nusb 的 blocking syscall 通过 `blocking` crate 执行
+# （runtime-agnostic，egui/smol 和 Tauri/tokio 都能用）
+nusb = { version = "0.2", features = ["smol"] }
+
+# Web USB（WASM）
+webusb-web = "0.5"
+web-sys = "0.3"
+js-sys = "0.3"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+
+# UI
+eframe = { version = "0.35", default-features = false, features = [
+    "default_fonts",
+    "glow",
+    "wayland",
+    "x11",
+] }
+egui = "0.35"
+egui_extras = { version = "0.35", features = ["image"] }
+
+# 桌面音频（cpal 底层）
+rodio = "0.20"
+
+# 桌面文件对话框
+rfd = "0.15"
+
+# 文本编码（GBK/UTF-8 检测，用于 Rio 设备字符串字段的智能解码）
+encoding_rs = "0.8"
+
+# 拼音转换（纯 Rust，无 C/Python 依赖，用于 cyrio-text crate）
+pinyin = "0.11"
+
+# 同步功能：目录遍历 + UUID 生成
+walkdir = "2"
+uuid = { version = "1", features = ["v4"] }
+
+# WebDAV 虚拟U盘（同步 HTTP 服务器，无 tokio 依赖）
+tiny_http = "0.12"
+
+# Tauri 2.0（实验性，与 egui 并行）
+# macos-private-api: macOS 透明窗口需要私有 API
+tauri = { version = "2", features = ["tray-icon", "macos-private-api"] }
+tauri-build = { version = "2" }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# 内部 crate 互相引用
+# cyrio-core / cyrio-text：私有 git 依赖（方案 C）
+# 仓库: github.com/cyanteam/cyrio-core (private)
+cyrio-core = { git = "https://github.com/cyanteam/cyrio-core.git" }
+cyrio-text = { git = "https://github.com/cyanteam/cyrio-core.git" }
+cyrio-transport-nusb = { path = "crates/cyrio-transport-nusb" }
+cyrio-transport-webusb = { path = "crates/cyrio-transport-webusb" }
+cyrio-audio = { path = "crates/cyrio-audio" }
+cyrio-webdav = { path = "crates/cyrio-webdav" }
+cyrio-app = { path = "crates/cyrio-app" }
+cyrio-tauri-lib = { path = "crates/cyrio-tauri" }
+cyrio-gpui = { path = "platforms/gpui-desktop" }
+
+# ============================================================
+# 本地开发：取消注释以下 [patch] 段即可使用本地 cyrio-core 源码
+# ============================================================
+# [patch."https://github.com/cyanteam/cyrio-core.git"]
+# cyrio-core = { path = "crates/cyrio-core" }
+# cyrio-text = { path = "crates/cyrio-text" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
+
+# WASM 用更小的体积
+[profile.release.package."*"]
+opt-level = "s"

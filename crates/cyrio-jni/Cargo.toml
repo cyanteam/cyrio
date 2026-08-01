@@ -1,0 +1,22 @@
+[package]
+name = "cyrio-jni"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "JNI bindings for cyrio-core (Java/JavaFX FFI bridge)"
+
+[lib]
+name = "cyrio_jni"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cyrio-core.workspace = true
+cyrio-transport-nusb.workspace = true
+cyrio-text.workspace = true
+smol.workspace = true
+log.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+env_logger = "0.11"
+jni = "0.21"

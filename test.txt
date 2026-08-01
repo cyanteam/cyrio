@@ -1,0 +1,129 @@
+.
+├── Cargo.lock
+├── Cargo.toml
+├── crates
+│   ├── cyrio-app
+│   │   ├── assets
+│   │   │   └── CJKSubset.ttf
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       ├── app.rs
+│   │       ├── fonts.rs
+│   │       ├── lib.rs
+│   │       ├── message.rs
+│   │       ├── pages
+│   │       │   ├── about.rs
+│   │       │   ├── connect.rs
+│   │       │   ├── device.rs
+│   │       │   ├── mod.rs
+│   │       │   ├── playlists.rs
+│   │       │   ├── songs.rs
+│   │       │   ├── sync.rs
+│   │       │   └── upload.rs
+│   │       ├── state.rs
+│   │       ├── task.rs
+│   │       └── theme.rs
+│   ├── cyrio-audio
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       ├── lib.rs
+│   │       └── manager.rs
+│   ├── cyrio-core
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       ├── api
+│   │       │   ├── device.rs
+│   │       │   ├── mod.rs
+│   │       │   ├── playlist.rs
+│   │       │   ├── types.rs
+│   │       │   └── upload.rs
+│   │       ├── error.rs
+│   │       ├── lib.rs
+│   │       ├── protocol
+│   │       │   ├── constants.rs
+│   │       │   ├── crc32.rs
+│   │       │   ├── fidl.rs
+│   │       │   ├── mod.rs
+│   │       │   ├── packets.rs
+│   │       │   ├── rio_file.rs
+│   │       │   └── rio_mem.rs
+│   │       └── transport.rs
+│   ├── cyrio-tauri
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       ├── audio_commands.rs
+│   │       ├── commands.rs
+│   │       ├── lib.rs
+│   │       ├── sync_commands.rs
+│   │       └── webdav_server.rs
+│   ├── cyrio-transport-nusb
+│   │   ├── Cargo.toml
+│   │   ├── examples
+│   │   │   └── debug_playlist_encoding.rs
+│   │   └── src
+│   │       └── lib.rs
+│   ├── cyrio-transport-webusb
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       └── lib.rs
+│   └── cyrio-webdav
+│       ├── Cargo.toml
+│       └── src
+│           └── lib.rs
+├── docs
+│   └── PROTOCOL.md
+├── platforms
+│   ├── desktop
+│   │   ├── Cargo.toml
+│   │   └── src
+│   │       └── main.rs
+│   ├── tauri-desktop
+│   │   ├── build.rs
+│   │   ├── capabilities
+│   │   │   └── default.json
+│   │   ├── Cargo.toml
+│   │   ├── frontend
+│   │   │   ├── index.html
+│   │   │   ├── package-lock.json
+│   │   │   ├── package.json
+│   │   │   ├── public
+│   │   │   │   └── fonts
+│   │   │   │       └── CJKSubset.ttf
+│   │   │   ├── src
+│   │   │   │   ├── App.tsx
+│   │   │   │   ├── CyrioLauncher.tsx
+│   │   │   │   ├── DeviceSvg.tsx
+│   │   │   │   ├── main.tsx
+│   │   │   │   └── styles.css
+│   │   │   ├── tsconfig.json
+│   │   │   └── vite.config.ts
+│   │   ├── gen
+│   │   │   └── schemas
+│   │   │       ├── acl-manifests.json
+│   │   │       ├── capabilities.json
+│   │   │       ├── desktop-schema.json
+│   │   │       └── macOS-schema.json
+│   │   ├── icons
+│   │   │   ├── 128x128@2x.png
+│   │   │   ├── 32x32.png
+│   │   │   ├── icon.png
+│   │   │   └── icon@2x.png
+│   │   ├── src
+│   │   │   └── main.rs
+│   │   └── tauri.conf.json
+│   └── web
+│       ├── Cargo.toml
+│       ├── index.html
+│       └── src
+│           └── main.rs
+├── README.md
+├── scripts
+│   ├── build-desktop.sh
+│   ├── build-web.sh
+│   ├── build-windows.sh
+│   ├── fmt.sh
+│   ├── serve-web.sh
+│   └── test.sh
+└── test.txt
+
+38 directories, 89 files

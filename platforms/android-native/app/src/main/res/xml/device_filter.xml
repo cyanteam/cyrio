@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- USB 设备过滤器：Diamond Multimedia (VID=0x045a) -->
+    <usb-device vendor-id="1114" />
+</resources>

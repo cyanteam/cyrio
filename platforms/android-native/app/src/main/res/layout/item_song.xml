@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 紧凑歌曲列表项：无图标，标题 + 元信息行，底部细线分隔 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- 标题行 -->
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="@color/md_on_surface"
+        android:textSize="14sp"
+        android:singleLine="false"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:lineSpacingExtra="0dp" />
+
+    <!-- 元信息行：存储位置 · 大小 · 时长 · 比特率 -->
+    <TextView
+        android:id="@+id/text_meta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="@color/md_on_surface_variant"
+        android:textSize="11sp"
+        android:singleLine="true"
+        android:ellipsize="end" />
+
+</LinearLayout>

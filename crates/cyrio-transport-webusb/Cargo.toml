@@ -1,0 +1,22 @@
+[package]
+name = "cyrio-transport-webusb"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "WebUSB-based transport for cyrio (WASM, Chrome/Edge only)"
+
+[dependencies]
+cyrio-core.workspace = true
+webusb-web.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+log.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures.workspace = true
+js-sys.workspace = true
+web-sys.workspace = true
+
+[lib]
+name = "cyrio_transport_webusb"
+path = "src/lib.rs"

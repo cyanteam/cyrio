@@ -1,0 +1,38 @@
+[package]
+name = "cyrio-gpui"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.85"
+license.workspace = true
+description = "Cyrio GPUI desktop frontend (Zed's GPUI engine)"
+
+[[bin]]
+name = "cyrio-gpui"
+path = "src/main.rs"
+
+[dependencies]
+# GPUI（Zed 的 GPU 加速 UI 框架，从 git 源获取最新 API）
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui_platform = { git = "https://github.com/zed-industries/zed", features = ["font-kit", "runtime_shaders"] }
+
+# 异步运行时（与 cyrio-core 一致，用 smol）
+smol.workspace = true
+async-channel.workspace = true
+
+# 序列化
+serde.workspace = true
+serde_json.workspace = true
+
+# 日志
+log.workspace = true
+env_logger = "0.11"
+
+# 文件对话框
+rfd.workspace = true
+
+# 内部 crate
+cyrio-core.workspace = true
+cyrio-transport-nusb.workspace = true
+cyrio-audio.workspace = true
+cyrio-webdav.workspace = true
+cyrio-text.workspace = true

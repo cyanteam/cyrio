@@ -1,0 +1,10 @@
+[package]
+name = "cyrio-text"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Text processing for cyrio: pinyin slug conversion and noise word stripping"
+
+[dependencies]
+# 纯 Rust 拼音库，无 C/Python 依赖
+pinyin = "0.11"

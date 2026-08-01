@@ -1,0 +1,30 @@
+[package]
+name = "cyrio-transport-nusb"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "nusb-based USB transport for cyrio (desktop: Windows/macOS/Linux)"
+
+[dependencies]
+cyrio-core.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+log.workspace = true
+smol.workspace = true
+
+# nusb 仅支持桌面平台 (Windows/macOS/Linux)
+[target.'cfg(not(target_os = "android"))'.dependencies]
+nusb.workspace = true
+
+# Android 通过 JNI 调用 UsbManager API
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21"
+
+[lib]
+name = "cyrio_transport_nusb"
+path = "src/lib.rs"
+
+[dev-dependencies]
+env_logger = "0.11"
+encoding_rs.workspace = true

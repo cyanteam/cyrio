@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MD3 设置项背景：SurfaceContainer 底色 + 16dp 圆角 + 涟漪 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_surface_container_highest">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_surface_container" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</ripple>

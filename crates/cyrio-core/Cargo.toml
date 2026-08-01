@@ -1,0 +1,25 @@
+[package]
+name = "cyrio-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Rio S-Series USB protocol core (platform-independent, pure Rust)"
+
+[dependencies]
+async-trait.workspace = true
+thiserror.workspace = true
+byteorder.workspace = true
+log.workspace = true
+smol.workspace = true
+encoding_rs.workspace = true
+cyrio-text.workspace = true
+serde.workspace = true
+
+[dev-dependencies]
+# 测试用 smol runtime
+smol.workspace = true
+
+[lib]
+name = "cyrio_core"
+path = "src/lib.rs"

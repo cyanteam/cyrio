@@ -1,0 +1,32 @@
+[package]
+name = "cyrio-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "egui App for cyrio (shared between desktop and web)"
+
+[dependencies]
+cyrio-core.workspace = true
+cyrio-transport-nusb.workspace = true
+cyrio-audio.workspace = true
+cyrio-webdav.workspace = true
+cyrio-text.workspace = true
+eframe.workspace = true
+egui.workspace = true
+egui_extras.workspace = true
+log.workspace = true
+async-channel.workspace = true
+smol.workspace = true
+rfd.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+# WASM hash 路由（Phase 5a）：读写 window.location.hash
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys = { workspace = true, features = ["Window", "Location"] }
+
+[lib]
+name = "cyrio_app"
+path = "src/lib.rs"

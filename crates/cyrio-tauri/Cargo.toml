@@ -1,0 +1,26 @@
+[package]
+name = "cyrio-tauri-lib"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Tauri 2.0 command bindings for cyrio-core"
+
+[lib]
+name = "cyrio_tauri"
+path = "src/lib.rs"
+
+[dependencies]
+cyrio-core.workspace = true
+cyrio-transport-nusb.workspace = true
+cyrio-audio.workspace = true
+cyrio-webdav.workspace = true
+tauri.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+smol.workspace = true
+log.workspace = true
+thiserror.workspace = true
+walkdir.workspace = true
+uuid.workspace = true
+tiny_http.workspace = true

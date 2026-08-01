@@ -1,0 +1,18 @@
+[package]
+name = "cyrio-webdav"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "WebDAV virtual USB drive server for cyrio (presents Rio MP3 player as a WebDAV share)"
+
+[dependencies]
+cyrio-core.workspace = true
+smol.workspace = true
+tiny_http.workspace = true
+log.workspace = true
+serde.workspace = true
+
+[lib]
+name = "cyrio_webdav"
+path = "src/lib.rs"
