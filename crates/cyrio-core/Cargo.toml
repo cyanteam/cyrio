@@ -23,3 +23,5 @@ smol.workspace = true
 [lib]
 name = "cyrio_core"
 path = "src/lib.rs"
+# rlib: Rust 内部依赖；cdylib: C 动态库（.so/.dylib/.dll）；staticlib: 静态库（.a/.lib）
+crate-type = ["rlib", "cdylib", "staticlib"]

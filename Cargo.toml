@@ -17,8 +17,6 @@ members = [
 # - crates/cyrio-transport-webusb
 # - platforms/web
 exclude = [
-    "crates/cyrio-core",
-    "crates/cyrio-text",
     "crates/cyrio-transport-webusb",
     "platforms/web",
 ]
@@ -111,9 +109,9 @@ cyrio-gpui = { path = "platforms/gpui-desktop" }
 # ============================================================
 # 本地开发：取消注释以下 [patch] 段即可使用本地 cyrio-core 源码
 # ============================================================
-# [patch."https://github.com/cyanteam/cyrio-core.git"]
-# cyrio-core = { path = "crates/cyrio-core" }
-# cyrio-text = { path = "crates/cyrio-text" }
+[patch."https://github.com/cyanteam/cyrio-core.git"]
+cyrio-core = { path = "crates/cyrio-core" }
+cyrio-text = { path = "crates/cyrio-text" }
 
 [profile.release]
 opt-level = 3
