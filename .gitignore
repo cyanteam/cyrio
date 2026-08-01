@@ -53,3 +53,4 @@ src-tauri
 # 大型二进制文件（后续通过 Release 或 LFS 分发）
 crates/cyrio-app/assets/CJKSubset.ttf
 platforms/android-native/app/src/main/jniLibs/arm64-v8a/libcyrio_jni.so
+test.txt
