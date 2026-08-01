@@ -29,6 +29,14 @@ jobs:
             nodejs \
             npm
 
+      - name: Clone cyrio-core private source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git clone https://x-access-token:${GH_TOKEN}@github.com/cyanteam/cyrio-core.git /tmp/cyrio-core-src
+          cp -r /tmp/cyrio-core-src/crates/cyrio-core/src crates/cyrio-core/src
+          cp -r /tmp/cyrio-core-src/crates/cyrio-text/src crates/cyrio-text/src
+
       - name: Build frontend
         working-directory: platforms/tauri-desktop/frontend
         run: |
@@ -38,8 +46,12 @@ jobs:
       - name: Build Tauri app
         run: cargo build --release -p cyrio-tauri
 
+      - name: Rename binary
+        run: |
+          cp target/release/cyrio-tauri target/release/cyrio-tauri_0.1.0_linux-x86_64
+
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
-          files: target/release/cyrio-tauri
+          files: target/release/cyrio-tauri_0.1.0_linux-x86_64
