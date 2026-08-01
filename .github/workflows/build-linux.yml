@@ -31,9 +31,9 @@ jobs:
 
       - name: Clone cyrio-core private source
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYRIO_CORE_TOKEN: ${{ secrets.CYRIO_CORE_TOKEN }}
         run: |
-          git clone https://x-access-token:${GH_TOKEN}@github.com/cyanteam/cyrio-core.git /tmp/cyrio-core-src
+          git clone https://x-access-token:${CYRIO_CORE_TOKEN}@github.com/cyanteam/cyrio-core.git /tmp/cyrio-core-src
           cp -r /tmp/cyrio-core-src/crates/cyrio-core/src crates/cyrio-core/src
           cp -r /tmp/cyrio-core-src/crates/cyrio-text/src crates/cyrio-text/src
 
