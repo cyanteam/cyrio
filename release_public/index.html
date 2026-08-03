@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cyrio - 帝盟Rio MP3播放器管理工具</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "Noto Sans CJK SC", sans-serif; background: #fff; color: #222; line-height: 1.7; }
+  a { color: #39c5bb; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* 顶部 */
+  .header { padding: 48px 20px 32px; text-align: center; border-bottom: 1px solid #eee; }
+  .header h1 { font-size: 1.8rem; font-weight: 700; }
+  .header p { margin-top: 8px; color: #666; font-size: 0.95rem; }
+  .header .links { margin-top: 16px; }
+  .header .links a { margin: 0 8px; font-size: 0.9rem; }
+
+  /* 内容 */
+  .main { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+
+  /* 下载 */
+  .downloads { margin-bottom: 40px; }
+  .downloads h2 { font-size: 1.2rem; margin-bottom: 16px; border-left: 3px solid #39c5bb; padding-left: 10px; }
+  .dl-list { display: flex; flex-direction: column; gap: 8px; }
+  .dl-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid #eee; border-radius: 4px;
+    transition: border-color 0.15s;
+  }
+  .dl-item:hover { border-color: #39c5bb; }
+  .dl-item .info { display: flex; flex-direction: column; }
+  .dl-item .name { font-weight: 600; font-size: 0.9rem; }
+  .dl-item .platform { font-size: 0.8rem; color: #999; }
+  .dl-item .size { font-size: 0.8rem; color: #999; margin-right: 12px; }
+  .dl-btn {
+    padding: 6px 16px; background: #39c5bb; color: #fff;
+    border-radius: 3px; font-size: 0.85rem; white-space: nowrap;
+  }
+  .dl-btn:hover { background: #2db0a7; text-decoration: none; }
+
+  /* 截图 */
+  .shots { margin-bottom: 40px; }
+  .shots h2 { font-size: 1.2rem; margin-bottom: 16px; border-left: 3px solid #39c5bb; padding-left: 10px; }
+  .shots h3 { font-size: 0.95rem; margin: 20px 0 10px; color: #555; }
+  .scroll { overflow-x: auto; padding-bottom: 8px; }
+  .row { display: flex; gap: 12px; width: max-content; }
+  .shot { text-align: center; }
+  .shot img { height: 420px; border: 1px solid #eee; border-radius: 3px; display: block; }
+  .shot span { display: block; margin-top: 4px; font-size: 0.8rem; color: #999; }
+
+  /* 优势 */
+  .features { margin-bottom: 40px; }
+  .features h2 { font-size: 1.2rem; margin-bottom: 16px; border-left: 3px solid #39c5bb; padding-left: 10px; }
+  .features ul { list-style: none; }
+  .features li { padding: 6px 0; font-size: 0.9rem; border-bottom: 1px solid #f5f5f5; }
+  .features li:last-child { border: none; }
+  .features li b { color: #39c5bb; }
+
+  /* 页脚 */
+  .footer { text-align: center; padding: 24px; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; }
+  .footer a { margin: 0 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>cyrio 拯救你的帝盟Rio MP3播放器</h1>
+  <p>无需32位电脑+帝盟古老驱动，现代设备直接传曲和管理</p>
+  <div class="links">
+    <a href="https://github.com/cyanteam/cyrio">GitHub 仓库</a>
+    <a href="https://github.com/cyanteam/cyrio/releases">所有版本</a>
+    <a href="https://ifdian.net/a/cyanteam">赞助支持</a>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="downloads">
+    <h2>下载 v0.2.0</h2>
+    <div class="dl-list">
+      <div class="dl-item">
+        <div class="info">
+          <span class="name">cyrio-tauri_v0.2.0_macos-arm64.dmg</span>
+          <span class="platform">macOS Apple Silicon (M1/M2/M3)</span>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="size">9.8 MB</span>
+          <a class="dl-btn" href="downloads/cyrio-tauri_v0.2.0_macos-arm64.dmg">下载</a>
+        </div>
+      </div>
+      <div class="dl-item">
+        <div class="info">
+          <span class="name">cyrio-tauri_v0.2.0_macos-x86_64.dmg</span>
+          <span class="platform">macOS Intel</span>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="size">9.5 MB</span>
+          <a class="dl-btn" href="downloads/cyrio-tauri_v0.2.0_macos-x86_64.dmg">下载</a>
+        </div>
+      </div>
+      <div class="dl-item">
+        <div class="info">
+          <span class="name">cyrio-tauri_v0.2.0_windows-x86_64.exe</span>
+          <span class="platform">Windows x86_64</span>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="size">20 MB</span>
+          <a class="dl-btn" href="downloads/cyrio-tauri_v0.2.0_windows-x86_64.exe">下载</a>
+        </div>
+      </div>
+      <div class="dl-item">
+        <div class="info">
+          <span class="name">cyrio-tauri_v0.2.0_linux-x86_64</span>
+          <span class="platform">Linux x86_64</span>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="size">17 MB</span>
+          <a class="dl-btn" href="downloads/cyrio-tauri_v0.2.0_linux-x86_64">下载</a>
+        </div>
+      </div>
+      <div class="dl-item">
+        <div class="info">
+          <span class="name">cyrio_v0.2.0_arm64-v8a.apk</span>
+          <span class="platform">Android arm64</span>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="size">4.5 MB</span>
+          <a class="dl-btn" href="downloads/cyrio_v0.2.0_arm64-v8a.apk">下载</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shots">
+    <h2>截图</h2>
+    <h3>桌面端</h3>
+    <div class="scroll"><div class="row">
+      <div class="shot"><img src="screenshots/tauri-song.png"><span>歌曲</span></div>
+      <div class="shot"><img src="screenshots/tauri-plls.png"><span>歌单列表</span></div>
+      <div class="shot"><img src="screenshots/tauri-plal.png"><span>歌单详情</span></div>
+      <div class="shot"><img src="screenshots/tauri-upl.png"><span>上传</span></div>
+      <div class="shot"><img src="screenshots/tauri-dev.png"><span>设备连接</span></div>
+      <div class="shot"><img src="screenshots/tauri-inf.png"><span>设备信息</span></div>
+      <div class="shot"><img src="screenshots/tauri-abt.png"><span>关于</span></div>
+    </div></div>
+    <h3>Android 端</h3>
+    <div class="scroll"><div class="row">
+      <div class="shot"><img src="screenshots/and-song.png"><span>歌曲</span></div>
+      <div class="shot"><img src="screenshots/and-plls.png"><span>歌单列表</span></div>
+      <div class="shot"><img src="screenshots/and-plal.png"><span>歌单详情</span></div>
+      <div class="shot"><img src="screenshots/and-upl.png"><span>上传</span></div>
+      <div class="shot"><img src="screenshots/and-inf.png"><span>设备信息</span></div>
+      <div class="shot"><img src="screenshots/and-abt.png"><span>关于</span></div>
+    </div></div>
+  </div>
+
+  <div class="features">
+    <h2>软件优势</h2>
+    <ul>
+      <li><b>告别老旧驱动</b> — 无需 32 位电脑、无需帝盟官方驱动，现代设备即插即用</li>
+      <li><b>全平台覆盖</b> — macOS / Windows / Linux / Android，同一套 Rust 核心</li>
+      <li><b>纯 Rust 实现</b> — 从 USB 协议到音频播放，全部 Rust 原生编写</li>
+      <li><b>WebDAV 虚拟U盘</b> — 将 Rio 设备映射为网络磁盘，拖拽传曲</li>
+      <li><b>批量管理</b> — 批量上传 / 删除 / 转拼音 / 去词 / 修复编码</li>
+      <li><b>歌单管理</b> — 创建、编辑、查看歌单</li>
+      <li><b>内置播放试听</b> — 双击即可试听，无需导出</li>
+      <li><b>双存储支持</b> — 内置存储 + SD 卡</li>
+      <li><b>演示模式</b> — 无需设备即可预览全部功能</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  Diamond Rio S-Series USB MP3 播放器管理工具 · MIT License<br>
+  <a href="https://github.com/cyanteam/cyrio">GitHub</a>
+  <a href="https://github.com/cyanteam/cyrio/releases">Releases</a>
+  <a href="https://ifdian.net/a/cyanteam">赞助</a>
+</div>
+
+</body>
+</html>
