@@ -1,12 +1,8 @@
-<div align="center">
-
 # cyrio 拯救你的帝盟Rio MP3播放器
 
 **无需32位电脑+帝盟古老驱动，现代设备直接传曲和管理。**
 
 [赞助：https://ifdian.net/a/cyanteam](https://ifdian.net/a/cyanteam)
-
-</div>
 
 Diamond Rio S-Series USB MP3 播放器管理工具（纯 Rust，跨平台）。
 
