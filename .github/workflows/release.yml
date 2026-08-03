@@ -85,8 +85,6 @@ jobs:
         if: matrix.label == 'windows-x86_64'
         run: cargo tauri build --target ${{ matrix.target }}
         working-directory: platforms/tauri-desktop
-        env:
-          RUSTFLAGS: '-C link-arg=-Wl,-z,max-page-size=16384'
 
       - name: Build Tauri app (Linux)
         if: matrix.label == 'linux-x86_64'
