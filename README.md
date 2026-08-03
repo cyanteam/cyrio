@@ -10,33 +10,25 @@ Diamond Rio S-Series USB MP3 播放器管理工具（纯 Rust，跨平台）。
 
 ### 桌面端（Tauri）
 
-<table width="100%">
-<tr>
-<td width="50%" align="center"><img src="_READMERES/tauri-song.png" width="100%"><br><b>歌曲</b></td>
-<td width="50%" align="center"><img src="_READMERES/tauri-plls.png" width="100%"><br><b>歌单列表</b></td>
-</tr>
-<tr>
-<td width="50%" align="center"><img src="_READMERES/tauri-plal.png" width="100%"><br><b>歌单详情</b></td>
-<td width="50%" align="center"><img src="_READMERES/tauri-upl.png" width="100%"><br><b>上传</b></td>
-</tr>
-<tr>
-<td width="50%" align="center"><img src="_READMERES/tauri-dev.png" width="100%"><br><b>设备连接</b></td>
-<td width="50%" align="center"><img src="_READMERES/tauri-inf.png" width="100%"><br><b>设备信息</b></td>
-</tr>
-<tr>
-<td width="50%" align="center"><img src="_READMERES/tauri-abt.png" width="100%"><br><b>关于</b></td>
-</tr>
-</table>
+<table><tr>
+<td align="center"><img src="_READMERES/tauri-song.png" height="500"><br><b>歌曲</b></td>
+<td align="center"><img src="_READMERES/tauri-plls.png" height="500"><br><b>歌单列表</b></td>
+<td align="center"><img src="_READMERES/tauri-plal.png" height="500"><br><b>歌单详情</b></td>
+<td align="center"><img src="_READMERES/tauri-upl.png" height="500"><br><b>上传</b></td>
+<td align="center"><img src="_READMERES/tauri-dev.png" height="500"><br><b>设备连接</b></td>
+<td align="center"><img src="_READMERES/tauri-inf.png" height="500"><br><b>设备信息</b></td>
+<td align="center"><img src="_READMERES/tauri-abt.png" height="500"><br><b>关于</b></td>
+</tr></table>
 
 ### Android 端
 
 <table><tr>
-<td align="center"><img src="_READMERES/and-song.png" width="200"><br><b>歌曲</b></td>
-<td align="center"><img src="_READMERES/and-plls.png" width="200"><br><b>歌单列表</b></td>
-<td align="center"><img src="_READMERES/and-plal.png" width="200"><br><b>歌单详情</b></td>
-<td align="center"><img src="_READMERES/and-upl.png" width="200"><br><b>上传</b></td>
-<td align="center"><img src="_READMERES/and-inf.png" width="200"><br><b>设备信息</b></td>
-<td align="center"><img src="_READMERES/and-abt.png" width="200"><br><b>关于</b></td>
+<td align="center"><img src="_READMERES/and-song.png" height="500"><br><b>歌曲</b></td>
+<td align="center"><img src="_READMERES/and-plls.png" height="500"><br><b>歌单列表</b></td>
+<td align="center"><img src="_READMERES/and-plal.png" height="500"><br><b>歌单详情</b></td>
+<td align="center"><img src="_READMERES/and-upl.png" height="500"><br><b>上传</b></td>
+<td align="center"><img src="_READMERES/and-inf.png" height="500"><br><b>设备信息</b></td>
+<td align="center"><img src="_READMERES/and-abt.png" height="500"><br><b>关于</b></td>
 </tr></table>
 
 ## 软件优势
