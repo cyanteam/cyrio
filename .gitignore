@@ -2,10 +2,6 @@
 target/
 **/*.rs.bk
 
-# cyrio-core / cyrio-text 源码（私有仓库：github.com/cyanteam/cyrio-core）
-crates/cyrio-core/src/
-crates/cyrio-text/src/
-
 # Node.js / 前端
 node_modules/
 dist/

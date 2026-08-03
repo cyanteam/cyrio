@@ -8,6 +8,9 @@ on:
         required: true
         default: 'v0.1.0'
 
+permissions:
+  contents: write
+
 jobs:
   build-linux:
     runs-on: ubuntu-22.04
@@ -25,17 +28,12 @@ jobs:
             libssl-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
+            libasound2-dev \
+            libglib2.0-dev \
+            libgtk-3-dev \
             patchelf \
             nodejs \
             npm
-
-      - name: Clone cyrio-core private source
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git clone https://x-access-token:${GH_TOKEN}@github.com/cyanteam/cyrio-core.git /tmp/cyrio-core-src
-          cp -r /tmp/cyrio-core-src/crates/cyrio-core/src crates/cyrio-core/src
-          cp -r /tmp/cyrio-core-src/crates/cyrio-text/src crates/cyrio-text/src
 
       - name: Build frontend
         working-directory: platforms/tauri-desktop/frontend

@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/cyrio-core",
+    "crates/cyrio-text",
     "crates/cyrio-transport-nusb",
     "crates/cyrio-audio",
     "crates/cyrio-webdav",
@@ -11,8 +13,6 @@ members = [
     "platforms/tauri-desktop",
     "platforms/gpui-desktop",
 ]
-# cyrio-core 和 cyrio-text 已拆分为私有 git 依赖（github.com/cyanteam/cyrio-core）
-# 本地开发时取消下方 [patch] 注释即可使用本地源码
 # WASM crate 暂排除（Phase 7 启用，需解决 web-sys 版本冲突）
 # - crates/cyrio-transport-webusb
 # - platforms/web
@@ -94,10 +94,8 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 # 内部 crate 互相引用
-# cyrio-core / cyrio-text：私有 git 依赖（方案 C）
-# 仓库: github.com/cyanteam/cyrio-core (private)
-cyrio-core = { git = "https://github.com/cyanteam/cyrio-core.git" }
-cyrio-text = { git = "https://github.com/cyanteam/cyrio-core.git" }
+cyrio-core = { path = "crates/cyrio-core" }
+cyrio-text = { path = "crates/cyrio-text" }
 cyrio-transport-nusb = { path = "crates/cyrio-transport-nusb" }
 cyrio-transport-webusb = { path = "crates/cyrio-transport-webusb" }
 cyrio-audio = { path = "crates/cyrio-audio" }
@@ -105,13 +103,6 @@ cyrio-webdav = { path = "crates/cyrio-webdav" }
 cyrio-app = { path = "crates/cyrio-app" }
 cyrio-tauri-lib = { path = "crates/cyrio-tauri" }
 cyrio-gpui = { path = "platforms/gpui-desktop" }
-
-# ============================================================
-# 本地开发：取消注释以下 [patch] 段即可使用本地 cyrio-core 源码
-# ============================================================
-[patch."https://github.com/cyanteam/cyrio-core.git"]
-cyrio-core = { path = "crates/cyrio-core" }
-cyrio-text = { path = "crates/cyrio-text" }
 
 [profile.release]
 opt-level = 3
