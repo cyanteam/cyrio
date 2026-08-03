@@ -4,7 +4,7 @@
 
 **无需32位电脑+帝盟古老驱动，现代设备直接传曲和管理。**
 
-[![赞助](https://img.shields.io/badge/爱发电-赞助支持-FF6B6B)](https://ifdian.net/a/cyanteam)
+[赞助：https://ifdian.net/a/cyanteam](https://ifdian.net/a/cyanteam)
 
 </div>
 
