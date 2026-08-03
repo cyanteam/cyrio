@@ -1,14 +1,58 @@
+<div align="center">
+
 # cyrio 拯救你的帝盟Rio MP3播放器
 
+**无需32位电脑+帝盟古老驱动，现代设备直接传曲和管理。**
+
+[![赞助](https://img.shields.io/badge/爱发电-赞助支持-FF6B6B)](https://ifdian.net/a/cyanteam)
+
+</div>
+
 Diamond Rio S-Series USB MP3 播放器管理工具（纯 Rust，跨平台）。
-无需32位电脑+帝盟古老驱动，现代设备可直接传曲和管理。
+
+## 软件截图
+
+### 桌面端（Tauri）
+
+<table><tr>
+<td align="center"><img src="_READMERES/tauri-song.png" width="240"><br>歌曲</td>
+<td align="center"><img src="_READMERES/tauri-plls.png" width="240"><br>歌单列表</td>
+<td align="center"><img src="_READMERES/tauri-plal.png" width="240"><br>歌单详情</td>
+<td align="center"><img src="_READMERES/tauri-upl.png" width="240"><br>上传</td>
+<td align="center"><img src="_READMERES/tauri-dev.png" width="240"><br>设备连接</td>
+<td align="center"><img src="_READMERES/tauri-inf.png" width="240"><br>设备信息</td>
+<td align="center"><img src="_READMERES/tauri-abt.png" width="240"><br>关于</td>
+</tr></table>
+
+### Android 端
+
+<table><tr>
+<td align="center"><img src="_READMERES/and-song.png" width="200"><br>歌曲</td>
+<td align="center"><img src="_READMERES/and-plls.png" width="200"><br>歌单列表</td>
+<td align="center"><img src="_READMERES/and-plal.png" width="200"><br>歌单详情</td>
+<td align="center"><img src="_READMERES/and-upl.png" width="200"><br>上传</td>
+<td align="center"><img src="_READMERES/and-inf.png" width="200"><br>设备信息</td>
+<td align="center"><img src="_READMERES/and-abt.png" width="200"><br>关于</td>
+</tr></table>
+
+## 软件优势
+
+- **告别老旧驱动** — 无需寻找 32 位电脑、无需安装帝盟官方驱动，现代 macOS / Windows / Linux / Android 设备即插即用
+- **全平台覆盖** — 桌面端（Tauri 2）和 Android 原生应用，同一套 Rust 核心协议，体验一致
+- **纯 Rust 实现** — 从 USB 协议到音频播放，全部 Rust 原生编写，无 GC 延迟，内存安全
+- **WebDAV 虚拟U盘** — 内置 WebDAV 服务器，可将 Rio 设备映射为网络磁盘，用文件管理器直接拖拽传曲
+- **批量管理** — 批量上传 / 删除 / 转拼音 / 去词 / 修复编码，一键处理大量歌曲
+- **歌单管理** — 支持创建、编辑、查看歌单，歌曲可加入或移出歌单
+- **内置播放试听** — 双击即可试听设备中的歌曲，无需导出
+- **双存储支持** — 同时管理内置存储和 SD 卡，自动识别存储容量与使用情况
+- **演示模式** — 无需连接真实设备即可预览全部功能界面
 
 ## 平台支持
 
 | 平台 | 框架 | 状态 |
 |------|------|------|
 | macOS / Linux / Windows | Tauri 2 | ✅ 主要版本 |
-| Android | 原生Kotlin + JNI | ✅ 主要版本 |
+| Android | 原生 Kotlin + JNI | ✅ 主要版本 |
 | macOS / Linux / Windows | egui | ✅ 可用，开发中 |
 | Web (WASM) | webusb-web | 🟡 正在适配 |
 | macOS / Linux / Windows | GPUI | 🟡 开发中 |
@@ -38,6 +82,7 @@ cyrio/
 ```
 
 ## 使用
+
 ### **[Release](https://github.com/cyanteam/cyrio/release)**
 
 ## 编译

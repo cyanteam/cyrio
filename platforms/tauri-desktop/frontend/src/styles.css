@@ -57,11 +57,11 @@
   --shadow-md: 0 2px 6px rgba(20, 30, 50, 0.08);
   --shadow-lg: 0 4px 12px rgba(20, 30, 50, 0.10);
 
-  /* 圆角 - 朴素 */
-  --radius-xs: 3px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  /* 圆角 - 全部去除 */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
 
   /* 动画 - 自然过渡 */
   --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -219,7 +219,7 @@ input {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 12px 20px 14px;
+  padding: 0;
 }
 
 /* ============================================================
@@ -232,9 +232,8 @@ input {
   gap: 16px;
   padding: 4px 10px;
   background: var(--bg-elevated);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--bg-subtle);
-  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  margin-top: 0;
   flex-shrink: 0;
   font-size: 13px;
   min-height: 26px;
@@ -276,7 +275,7 @@ input {
   flex: 1;
   height: 6px;
   background: var(--bg-subtle);
-  border-radius: 3px;
+  border-radius: 0;
   overflow: hidden;
   min-width: 40px;
   max-width: 160px;
@@ -285,7 +284,7 @@ input {
 .storage-status-mini-fill {
   height: 100%;
   background: var(--rio-blue);
-  border-radius: 2px;
+  border-radius: 0;
   transition: width 0.4s var(--ease-out);
 }
 
@@ -300,23 +299,23 @@ input {
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 6px;
+  padding: 3px 8px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--bg-subtle);
   flex-shrink: 0;
 }
 
 /* 退回按钮（左上角，点击断开返回） */
 .device-circle-mini {
-  height: 32px;
-  padding: 0 10px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-elevated);
+  height: 26px;
+  padding: 0 8px;
+  background: var(--bg-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--bg-subtle);
+  border: none;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
@@ -348,15 +347,14 @@ input {
   color: var(--rio-blue);
 }
 
-/* 长条菜单 - 简洁，宽度占满 */
+/* 长条菜单 - 纯文本选项卡，无背景块 */
 .menu-bar {
   display: flex;
-  gap: 1px;
-  padding: 3px;
-  background: var(--bg-elevated);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--bg-subtle);
+  gap: 0;
+  padding: 0;
+  height: 26px;
+  background: transparent;
+  border: none;
   flex: 1;
   min-width: 0;
 }
@@ -365,23 +363,28 @@ input {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 12px;
-  border-radius: var(--radius-xs);
+  padding: 0 10px;
+  height: 26px;
+  background: transparent;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .menu-item:hover {
-  background: var(--bg-hover);
+  background: transparent;
   color: var(--text);
 }
 
 .menu-item.active {
-  background: var(--rio-blue);
-  color: white;
+  background: transparent;
+  color: var(--rio-blue);
+  border-bottom: 2px solid var(--rio-blue);
 }
 
 /* 传输进行中时锁定的菜单按钮 */
@@ -457,6 +460,7 @@ input {
   overflow: hidden;
   min-height: 0;
   gap: 10px;
+  padding: 8px;
 }
 
 .content-inner {
@@ -490,11 +494,8 @@ input {
 
 .pane {
   width: 100%;
-  background: var(--bg-elevated);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--bg-subtle);
-  padding: 12px 16px;
+  background: var(--bg-card);
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -507,7 +508,7 @@ input {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-bottom: 8px;
+  padding: 0 8px 8px;
   border-bottom: 1px solid var(--bg-subtle);
   flex-shrink: 0;
 }
@@ -528,17 +529,20 @@ input {
 }
 
 .refresh-btn {
-  width: 24px;
   height: 24px;
-  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  border-radius: 0;
   background: var(--bg-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
   color: var(--text-secondary);
   transition: all 0.15s var(--ease-out);
   margin-left: auto;
+  border: none;
+  cursor: pointer;
 }
 
 .refresh-btn:hover:not(:disabled) {
@@ -592,8 +596,37 @@ input {
 }
 
 /* ============================================================
-   批量操作工具栏
+   批量操作工具栏 + 筛选栏（合并为一行）
    ============================================================ */
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.toolbar-row .batch-toolbar,
+.toolbar-row .filter-bar {
+  padding: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.toolbar-row .filter-bar {
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+  flex-shrink: 0;
+}
 
 .batch-toolbar {
   display: flex;
@@ -601,11 +634,15 @@ input {
   gap: 4px;
   padding: 4px 0;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .batch-btn {
-  padding: 4px 10px;
+  height: 28px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
   border-radius: var(--radius-sm);
   background: var(--bg-subtle);
   color: var(--text-secondary);
@@ -613,6 +650,7 @@ input {
   font-weight: 500;
   transition: all 0.15s var(--ease-out);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .batch-btn:hover:not(:disabled) {
@@ -644,11 +682,12 @@ input {
   gap: 10px;
   padding: 4px 0;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .filter-group {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 5px;
 }
@@ -683,9 +722,10 @@ input {
 
 .filter-search {
   flex: 1;
-  min-width: 100px;
-  max-width: 220px;
-  padding: 4px 8px;
+  min-width: 60px;
+  max-width: 160px;
+  height: 28px;
+  padding: 0 8px;
   border: 1px solid var(--bg-subtle);
   border-radius: var(--radius-sm);
   background: var(--bg-subtle);
@@ -721,16 +761,17 @@ input {
 }
 
 .page-btn {
-  width: 22px;
-  height: 22px;
+  height: 28px;
+  padding: 0 10px;
   border-radius: var(--radius-sm);
   background: var(--bg-subtle);
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s var(--ease-out);
+  white-space: nowrap;
 }
 
 .page-btn:hover:not(:disabled) {
@@ -1006,7 +1047,7 @@ input {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-bottom: 8px;
+  padding: 0 8px 8px;
   border-bottom: 1px solid var(--bg-subtle);
   flex-shrink: 0;
 }
@@ -1014,13 +1055,17 @@ input {
 .back-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
+  padding: 0 8px;
+  height: 24px;
+  border-radius: 0;
   background: var(--bg-subtle);
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
   transition: all 0.15s var(--ease-out);
 }
 
@@ -1096,23 +1141,22 @@ input {
   padding: 16px 0;
 }
 
-/* WebDAV 虚拟U盘按钮（顶栏左侧） */
+/* WebDAV 虚拟U盘按钮（顶栏右侧） */
 .webdav-btn {
-  height: 30px;
-  padding: 0 12px;
+  height: 26px;
+  padding: 0 10px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid var(--bg-subtle);
-  background: var(--bg-elevated);
+  border: none;
+  background: var(--bg-subtle);
   color: var(--text);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: all 0.15s var(--ease-out);
   white-space: nowrap;
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .webdav-btn:hover:not(:disabled) {
@@ -1301,7 +1345,7 @@ input {
   position: absolute;
   inset: 4px;
   background: var(--rio-blue-subtle);
-  border-radius: 2px;
+  border-radius: 0;
   opacity: 0.6;
   transition: opacity 0.3s var(--ease-out);
 }
@@ -1324,7 +1368,7 @@ input {
   width: 50px;
   height: 4px;
   background: var(--text-dim);
-  border-radius: 2px;
+  border-radius: 0;
   margin-top: 0;
 }
 
@@ -1393,6 +1437,28 @@ input {
   border-color: var(--rio-blue);
   color: var(--rio-blue);
   background: var(--rio-blue-subtle);
+}
+
+/* 演示模式按钮：比强制添加更突出，使用主色调实心按钮 */
+.connect-demo-btn {
+  padding: 8px 20px;
+  background: var(--rio-blue);
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s var(--ease-out);
+  margin-top: 8px;
+}
+
+.connect-demo-btn:hover {
+  background: var(--rio-blue-dark, #2bb0a8);
+}
+
+.connect-demo-btn:active {
+  background: #2aa39c;
 }
 
 /* ============================================================
@@ -1527,7 +1593,7 @@ input {
   width: 3px;
   height: 16px;
   background: var(--rio-blue);
-  border-radius: 2px;
+  border-radius: 0;
   flex-shrink: 0;
   margin-left: 12px;
 }
@@ -1676,7 +1742,7 @@ input {
 }
 .upload-file-list::-webkit-scrollbar-thumb {
   background: var(--text-dim);
-  border-radius: 2px;
+  border-radius: 0;
 }
 .upload-file-item {
   display: flex;
@@ -1914,7 +1980,7 @@ input {
 }
 .transmission-list::-webkit-scrollbar-thumb {
   background: var(--text-dim);
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 .transmission-list-header {
@@ -2011,14 +2077,14 @@ input {
 .transmission-row-bar {
   height: 6px;
   background: var(--bg-subtle);
-  border-radius: 3px;
+  border-radius: 0;
   overflow: hidden;
 }
 
 .transmission-row-fill {
   height: 100%;
   background: var(--rio-blue);
-  border-radius: 3px;
+  border-radius: 0;
   transition: width 0.2s var(--ease-out);
 }
 
@@ -2147,12 +2213,10 @@ input {
    ============================================================ */
 
 .paginate-toggle {
-  width: 36px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-elevated);
-  border: 1px solid var(--bg-subtle);
-  box-shadow: var(--shadow-sm);
+  width: 30px;
+  height: 26px;
+  background: var(--bg-subtle);
+  border: none;
   color: var(--text-dim);
   display: flex;
   align-items: center;
@@ -2300,9 +2364,8 @@ input {
 
 .song-table-wrap {
   flex: 1;
-  overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  overflow-y: auto;
+  overflow-x: hidden;
   background: var(--bg-card);
 }
 
@@ -2363,8 +2426,7 @@ input {
 }
 
 .col-title {
-  width: 28%;
-  min-width: 120px;
+  width: auto;
 }
 
 /* 短文本列：禁止换行，保证一行显示完整 */
@@ -2378,7 +2440,6 @@ input {
 
 .col-artist {
   width: 16%;
-  min-width: 80px;
   max-width: 160px;
   color: var(--text-dim);
   white-space: nowrap;
@@ -2387,7 +2448,6 @@ input {
 }
 
 .col-album {
-  min-width: 80px;
   max-width: 160px;
   color: var(--text-dim);
   white-space: nowrap;
@@ -2397,7 +2457,6 @@ input {
 
 .col-time {
   width: 52px;
-  min-width: 44px;
   text-align: right;
   white-space: nowrap;
   color: var(--text-dim);
@@ -2406,7 +2465,6 @@ input {
 
 .col-size {
   width: 60px;
-  min-width: 52px;
   text-align: right;
   white-space: nowrap;
   color: var(--text-dim);
@@ -2416,7 +2474,6 @@ input {
 /* 比特率：收窄 */
 .col-bitrate {
   width: 60px;
-  min-width: 54px;
   text-align: right;
   white-space: nowrap;
   color: var(--text-dim);
@@ -2426,7 +2483,6 @@ input {
 /* 存储位置：收窄 */
 .col-mem {
   width: 56px;
-  min-width: 50px;
   text-align: center;
   white-space: nowrap;
 }
@@ -2437,7 +2493,7 @@ input {
   width: 14px;
   height: 14px;
   border: 1.5px solid var(--border);
-  border-radius: 3px;
+  border-radius: 0;
   margin-right: 8px;
   vertical-align: -2px;
   flex-shrink: 0;
@@ -2607,7 +2663,7 @@ input {
   flex: 1;
   height: 6px;
   background: var(--bg-subtle);
-  border-radius: 3px;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   position: relative;
@@ -2616,7 +2672,7 @@ input {
 .player-progress-fill {
   height: 100%;
   background: var(--rio-blue);
-  border-radius: 2px;
+  border-radius: 0;
   transition: width 0.2s var(--ease-out);
 }
 
@@ -2818,7 +2874,7 @@ input {
 
 .confirm-card {
   background: var(--bg-elevated);
-  border-radius: 6px;
+  border-radius: 0;
   width: 360px;
   max-width: calc(100vw - 32px);
   padding: 20px;
@@ -2848,7 +2904,7 @@ input {
 
 .confirm-btn {
   padding: 6px 16px;
-  border-radius: 4px;
+  border-radius: 0;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -2985,7 +3041,7 @@ input {
   flex: 1;
   padding: 2px 6px;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 0;
   font-size: 13px;
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   color: var(--text);
@@ -3009,7 +3065,7 @@ input {
   padding: 3px 8px;
   font-size: 12px;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--bg);
   color: var(--text-secondary);
   cursor: pointer;
@@ -3034,9 +3090,9 @@ input {
 .settings-section {
   background: var(--bg-elevated);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius);
+  border-radius: 0;
   padding: 14px 16px;
-  margin-bottom: 12px;
+  margin: 0 8px 12px;
 }
 
 .settings-section-title {
@@ -3090,7 +3146,7 @@ input {
   position: relative;
   width: 36px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: 0;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   cursor: pointer;
@@ -3380,7 +3436,7 @@ input {
 .batch-progress-bar-fill {
   height: 100%;
   background: var(--rio-blue);
-  border-radius: 2px;
+  border-radius: 0;
   transition: width 0.3s var(--ease-out);
 }
 
@@ -3745,10 +3801,10 @@ input {
 .app-root.mobile {
   --m3-elevation-1: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   --m3-elevation-2: 0 1px 3px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.06);
-  --m3-radius-sm: 8px;
-  --m3-radius-md: 12px;
-  --m3-radius-lg: 16px;
-  --m3-radius-xl: 24px;
+  --m3-radius-sm: 0;
+  --m3-radius-md: 0;
+  --m3-radius-lg: 0;
+  --m3-radius-xl: 0;
   --m3-touch-target: 48px;
   --m3-surface: #ffffff;
   --m3-surface-variant: #f3f4f8;
@@ -3973,7 +4029,7 @@ input {
   font-size: 10px;
   font-weight: 600;
   padding: 3px 8px;
-  border-radius: 20px;
+  border-radius: 0;
   letter-spacing: 0.3px;
 }
 
@@ -4131,7 +4187,7 @@ input {
 .mobile-more-handle {
   width: 32px;
   height: 4px;
-  border-radius: 2px;
+  border-radius: 0;
   background: var(--m3-outline);
   margin: 8px auto 16px;
 }
@@ -4435,7 +4491,7 @@ input {
 .mobile-context-handle {
   width: 32px;
   height: 4px;
-  border-radius: 2px;
+  border-radius: 0;
   background: var(--m3-outline);
   margin: 8px auto 4px;
 }

@@ -4,6 +4,8 @@ import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { DeviceSvg, type DeviceModel } from "./DeviceSvg";
+import type { SongInfo, PlaylistInfo, StorageInfo, UsbDevice } from "./types";
+import { demoInvoke, setDemoMode, isDemoMode } from "./demoData";
 
 // ============================================================================
 // 移动端检测 — Android/iOS 时切换为移动布局
@@ -99,45 +101,6 @@ function settingsToTextOpts(s: AppSettings): {
       .filter((w) => w.length > 0),
   };
 }
-
-type SongInfo = {
-  file_no: number;
-  size: number;
-  time: number;
-  name: string;
-  title: string;
-  artist: string;
-  album: string;
-  bit_rate: number;
-  mem_unit: number;
-};
-
-type PlaylistInfo = {
-  file_no: number;
-  size: number;
-  name: string;
-  title: string;
-  mem_unit: number;
-};
-
-type StorageInfo = {
-  mem_unit: number;
-  present: boolean;
-  size: number;
-  used: number;
-  free: number;
-  size_formatted: string;
-};
-
-type UsbDevice = {
-  vid: string;
-  pid: string;
-  vid_num: number;
-  pid_num: number;
-  name: string;
-  manufacturer: string;
-  is_diamond: boolean;
-};
 
 type BatchUploadResult = {
   path: string;
@@ -329,6 +292,15 @@ const MENU_ICONS: Record<MenuAction, JSX.Element> = {
 };
 
 const AUTO_SCAN_INTERVAL_MS = 8000;
+
+/**
+ * 安全 invoke 包装器：演示模式下拦截到 demoInvoke 返回模拟数据，
+ * 正常模式下透传到 Tauri 后端。
+ */
+function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+  if (isDemoMode()) return demoInvoke<T>(cmd, args);
+  return invoke<T>(cmd, args as never);
+}
 
 /** 字节数格式化（如 1.2 MB / 5.0 MB） */
 function formatBytes(bytes: number): string {
@@ -596,7 +568,7 @@ export default function CyrioLauncher() {
   /** 更新系统托盘 tooltip（连接状态 + 传输进度） */
   const updateTray = useCallback(
     (conn: boolean, transferring?: [number, number]) => {
-      invoke("update_tray_tooltip", {
+      safeInvoke("update_tray_tooltip", {
         connected: conn,
         transferring: transferring ?? null,
       }).catch(() => {
@@ -669,11 +641,11 @@ export default function CyrioLauncher() {
     try {
       const all: PlaylistInfo[] = [];
       try {
-        const internal = await invoke<PlaylistInfo[]>("list_playlists", { memUnit: 0 });
+        const internal = await safeInvoke<PlaylistInfo[]>("list_playlists", { memUnit: 0 });
         all.push(...internal.map((p) => ({ ...p, mem_unit: 0 })));
       } catch {}
       try {
-        const sd = await invoke<PlaylistInfo[]>("list_playlists", { memUnit: 1 });
+        const sd = await safeInvoke<PlaylistInfo[]>("list_playlists", { memUnit: 1 });
         all.push(...sd.map((p) => ({ ...p, mem_unit: 1 })));
       } catch {}
       playlistsCacheRef.current = all;
@@ -696,7 +668,7 @@ export default function CyrioLauncher() {
   async function playSong(song: SongInfo) {
     try {
       setCurrentPlaying(song);
-      await invoke("play_song", { fileNo: song.file_no, memUnit: song.mem_unit });
+      await safeInvoke("play_song", { fileNo: song.file_no, memUnit: song.mem_unit });
     } catch (e) {
       setNotice(`播放失败：${e}`);
       setCurrentPlaying(null);
@@ -705,7 +677,7 @@ export default function CyrioLauncher() {
 
   // 启动时检查已连接状态
   useEffect(() => {
-    invoke<boolean>("is_connected")
+    safeInvoke<boolean>("is_connected")
       .then((ok) => {
         if (ok) {
           setConnected(true);
@@ -750,8 +722,8 @@ export default function CyrioLauncher() {
     if (keepAliveRef.current) clearInterval(keepAliveRef.current);
     keepAliveRef.current = window.setInterval(async () => {
       try {
-        await invoke("is_connected");
-        await invoke("get_storage", { memUnit: 0 }).catch(() => {});
+        await safeInvoke("is_connected");
+        await safeInvoke("get_storage", { memUnit: 0 }).catch(() => {});
       } catch {
         setConnected(false);
         stopKeepAlive();
@@ -769,8 +741,8 @@ export default function CyrioLauncher() {
 
   async function refreshStorage() {
     try {
-      const i = await invoke<StorageInfo>("get_storage", { memUnit: 0 });
-      const s = await invoke<StorageInfo>("get_storage", { memUnit: 1 }).catch(() => null);
+      const i = await safeInvoke<StorageInfo>("get_storage", { memUnit: 0 });
+      const s = await safeInvoke<StorageInfo>("get_storage", { memUnit: 1 }).catch(() => null);
       setStorage({ internal: i, sd: s });
     } catch {
       // 忽略
@@ -781,7 +753,7 @@ export default function CyrioLauncher() {
     setConnecting(true);
     setNotice(null);
     try {
-      await invoke("open_device");
+      await safeInvoke("open_device");
       setConnected(true);
       setDeviceModel("s-series");
       navigate("songs");
@@ -808,7 +780,7 @@ export default function CyrioLauncher() {
       if (cancelled || connected) return;
       setConnecting(true);
       try {
-        await invoke("open_device");
+        await safeInvoke("open_device");
         if (!cancelled) {
           setConnected(true);
           setDeviceModel("s-series");
@@ -842,7 +814,7 @@ export default function CyrioLauncher() {
     stopKeepAlive();
     setStorage({ internal: null, sd: null });
     try {
-      await invoke("close_device");
+      await safeInvoke("close_device");
     } catch {}
   }
 
@@ -855,7 +827,7 @@ export default function CyrioLauncher() {
     let active = true;
     const poll = async () => {
       try {
-        const s = await invoke<WebDavStatus>("get_webdav_status");
+        const s = await safeInvoke<WebDavStatus>("get_webdav_status");
         if (active) setWebdavStatus(s);
       } catch {}
     };
@@ -890,14 +862,14 @@ export default function CyrioLauncher() {
     setWebdavToggling(true);
     try {
       if (webdavStatus.type === "running") {
-        await invoke("stop_webdav");
+        await safeInvoke("stop_webdav");
         setWebdavStatus({ type: "stopped" });
       } else {
-        await invoke<string>("start_webdav");
+        await safeInvoke<string>("start_webdav");
         setWebdavStatus({ type: "running", addr: "http://127.0.0.1:8765" });
         // 自动挂载
         try {
-          await invoke("mount_webdav");
+          await safeInvoke("mount_webdav");
         } catch (e) {
           setNotice(`WebDAV 已启动，但自动挂载失败：${e}`);
         }
@@ -916,7 +888,7 @@ export default function CyrioLauncher() {
     // 自动跳转到传输选项卡，让用户看到进度
     navigate("transmission");
     try {
-      const expanded = await invoke<string[]>("expand_paths", { paths });
+      const expanded = await safeInvoke<string[]>("expand_paths", { paths });
       if (expanded.length === 0) {
         setNotice("没有找到 MP3 文件");
         setUploading(false);
@@ -939,7 +911,7 @@ export default function CyrioLauncher() {
           prev.map((f, idx) => (idx === i ? { ...f, status: "uploading" as const } : f)),
         );
         try {
-          const batch = await invoke<BatchUploadResult[]>("upload_song_batch", {
+          const batch = await safeInvoke<BatchUploadResult[]>("upload_song_batch", {
             paths: [expanded[i]],
             memUnit,
             textOpts: settingsToTextOpts(settings),
@@ -1008,6 +980,14 @@ export default function CyrioLauncher() {
           notice={notice}
           onConnect={connectDevice}
           onForceAdd={() => setShowForceAdd(true)}
+          onDemo={() => {
+            // 演示模式：启用 mock 数据，跳过真实设备连接
+            setDemoMode(true);
+            setConnected(true);
+            setDeviceModel("s-series");
+            navigate("songs");
+            refreshStorage();
+          }}
           onConnected={async () => {
             setConnected(true);
             setDeviceModel("s-series");
@@ -1047,8 +1027,7 @@ export default function CyrioLauncher() {
   return (
     <div className={`app-root ${isMobile ? "mobile" : ""}`}>
       {!isMobile && <TitleBar deviceLabel={deviceLabel} transmitting={transmitting} pageLabel={pageLabel} />}
-      <div className="launcher">
-      {/* 顶部栏：仅桌面端显示返回+虚拟U盘+菜单。移动端不需要 */}
+      {/* 顶部工具栏：全宽，紧贴标题栏下方 */}
       {!isMobile && (
       <div className="top-bar">
         <button
@@ -1059,20 +1038,6 @@ export default function CyrioLauncher() {
           <svg className="back-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M9 1 L3 7 L9 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
-          <span className="back-arrow-text">返回</span>
-        </button>
-
-        <button
-          className={`webdav-btn ${webdavStatus.type === "running" ? "running" : ""}`}
-          onClick={toggleWebdav}
-          disabled={webdavToggling || !connected}
-          title={
-            webdavStatus.type === "running"
-              ? "WebDAV 运行中，点击停止"
-              : "启动 WebDAV 虚拟U盘并自动挂载"
-          }
-        >
-          {webdavToggling ? "…" : "虚拟U盘"}
         </button>
 
         {/* 桌面端：顶部菜单栏 */}
@@ -1094,7 +1059,20 @@ export default function CyrioLauncher() {
           })}
         </nav>
 
-        {/* 桌面端：分页切换 */}
+        {/* 右侧：虚拟U盘 + 分页切换 */}
+        <button
+          className={`webdav-btn ${webdavStatus.type === "running" ? "running" : ""}`}
+          onClick={toggleWebdav}
+          disabled={webdavToggling || !connected}
+          title={
+            webdavStatus.type === "running"
+              ? "WebDAV 运行中，点击停止"
+              : "启动 WebDAV 虚拟U盘并自动挂载"
+          }
+        >
+          {webdavToggling ? "…" : "虚拟U盘"}
+        </button>
+
         <button
           className={`paginate-toggle ${paginate ? "active" : ""}`}
           onClick={() => setPaginate((v) => !v)}
@@ -1117,7 +1095,7 @@ export default function CyrioLauncher() {
         </button>
       </div>
       )}
-
+      <div className="launcher">
       <div className="content-area">
           {activeAction && (
             <div
@@ -1194,7 +1172,7 @@ export default function CyrioLauncher() {
         <PlayerBar
           song={currentPlaying}
           onClose={() => {
-            invoke("stop_audio").catch(() => {});
+            safeInvoke("stop_audio").catch(() => {});
             setCurrentPlaying(null);
           }}
         />
@@ -1368,12 +1346,14 @@ function ConnectScene({
   onConnect,
   onForceAdd,
   onConnected,
+  onDemo,
 }: {
   connecting: boolean;
   notice: string | null;
   onConnect: () => void;
   onForceAdd: () => void;
   onConnected: () => void;
+  onDemo: () => void;
 }) {
   const [rioDevices, setRioDevices] = useState<UsbDevice[]>([]);
   const [scanning, setScanning] = useState(false);
@@ -1388,7 +1368,7 @@ function ConnectScene({
     if (connectingRef.current) return;
     setScanning(true);
     try {
-      const list = await invoke<UsbDevice[]>("list_usb_devices");
+      const list = await safeInvoke<UsbDevice[]>("list_usb_devices");
       if (!mountedRef.current) return;
       const diamond = list.filter((d) => d.is_diamond);
       setRioDevices(diamond);
@@ -1431,7 +1411,7 @@ function ConnectScene({
     setLocalConnecting(true);
     setLocalNotice(null);
     try {
-      await invoke("open_device_force", { vid: d.vid_num, pid: d.pid_num });
+      await safeInvoke("open_device_force", { vid: d.vid_num, pid: d.pid_num });
       onConnected();
     } catch (e) {
       setLocalNotice(`连接失败：${e}`);
@@ -1470,6 +1450,9 @@ function ConnectScene({
         {localNotice && <div className="connect-notice">{localNotice}</div>}
         <button className="connect-force-btn" onClick={() => { stopScan(); onForceAdd(); }}>
           + 强制添加任意 USB 设备
+        </button>
+        <button className="connect-demo-btn" onClick={() => { stopScan(); onDemo(); }}>
+          演示模式（无需设备）
         </button>
       </div>
     );
@@ -1522,6 +1505,9 @@ function ConnectScene({
       <button className="connect-force-btn" onClick={() => { stopScan(); onForceAdd(); }}>
         + 强制添加任意 USB 设备
       </button>
+      <button className="connect-demo-btn" onClick={() => { stopScan(); onDemo(); }}>
+        演示模式（无需设备）
+      </button>
     </div>
   );
 }
@@ -1543,7 +1529,7 @@ function DropTargetModal({
   const [expanding, setExpanding] = useState(true);
 
   useEffect(() => {
-    invoke<string[]>("expand_paths", { paths })
+    safeInvoke<string[]>("expand_paths", { paths })
       .then((list) => {
         setExpanded(list);
         setExpanding(false);
@@ -1619,7 +1605,7 @@ function ForceAddDeviceModal({
     setLoading(true);
     setError(null);
     try {
-      const list = await invoke<UsbDevice[]>("list_usb_devices");
+      const list = await safeInvoke<UsbDevice[]>("list_usb_devices");
       list.sort((a, b) => {
         if (a.is_diamond && !b.is_diamond) return -1;
         if (!a.is_diamond && b.is_diamond) return 1;
@@ -1640,7 +1626,7 @@ function ForceAddDeviceModal({
     setConnecting(d.vid_num);
     setError(null);
     try {
-      const info = await invoke<{ connected: boolean; model: string }>("open_device_force", {
+      const info = await safeInvoke<{ connected: boolean; model: string }>("open_device_force", {
         vid: d.vid_num,
         pid: d.pid_num,
       });
@@ -2312,7 +2298,7 @@ function SongsPane({
       const all: SongInfo[] = [];
       // 先请求内置存储
       try {
-        const internal = await invoke<SongInfo[]>("list_songs", { memUnit: 0 });
+        const internal = await safeInvoke<SongInfo[]>("list_songs", { memUnit: 0 });
         if (!unmountedRef.current) {
           all.push(...internal.map((s) => ({ ...s, mem_unit: 0 })));
         }
@@ -2321,7 +2307,7 @@ function SongsPane({
       }
       // 再请求 SD 卡（串行，避免与内置存储的 USB 传输并发）
       try {
-        const sd = await invoke<SongInfo[]>("list_songs", { memUnit: 1 });
+        const sd = await safeInvoke<SongInfo[]>("list_songs", { memUnit: 1 });
         if (!unmountedRef.current) {
           all.push(...sd.map((s) => ({ ...s, mem_unit: 1 })));
         }
@@ -2417,7 +2403,7 @@ function SongsPane({
         for (const s of songs) {
           if (selected.has(songKey(s))) {
             try {
-              await invoke("delete_song", { fileNo: s.file_no, memUnit: s.mem_unit });
+              await safeInvoke("delete_song", { fileNo: s.file_no, memUnit: s.mem_unit });
               okCount++;
             } catch {
               failCount++;
@@ -2452,7 +2438,7 @@ function SongsPane({
     let failCount = 0;
     for (const s of pickerTargetSongs) {
       try {
-        await invoke("add_song_to_playlist", {
+        await safeInvoke("add_song_to_playlist", {
           songFileNo: s.file_no,
           songMemUnit: s.mem_unit,
           playlistFileNo: p.file_no,
@@ -2486,7 +2472,7 @@ function SongsPane({
       danger: true,
       onConfirm: async () => {
         try {
-          await invoke("delete_song", { fileNo: song.file_no, memUnit: song.mem_unit });
+          await safeInvoke("delete_song", { fileNo: song.file_no, memUnit: song.mem_unit });
           onError("删除成功");
           await loadSongs();
         } catch (e) {
@@ -2504,7 +2490,7 @@ function SongsPane({
       message: `将修复 "${title}" 的中文编码。继续？`,
       onConfirm: async () => {
         try {
-          await invoke("repair_song_encoding", {
+          await safeInvoke("repair_song_encoding", {
             fileNo: song.file_no,
             memUnit: song.mem_unit,
           });
@@ -2549,7 +2535,7 @@ function SongsPane({
     if (selected.size === 0) return;
     const items = selectedItems();
     try {
-      const previews = await invoke<PreviewResult[]>("preview_slug", { items });
+      const previews = await safeInvoke<PreviewResult[]>("preview_slug", { items });
       if (unmountedRef.current) return;
       setBatchPreview({
         phase: "preview",
@@ -2571,7 +2557,7 @@ function SongsPane({
     const items = selectedItems();
     const words = customWords();
     try {
-      const previews = await invoke<PreviewResult[]>("preview_strip", { items, customWords: words });
+      const previews = await safeInvoke<PreviewResult[]>("preview_strip", { items, customWords: words });
       if (unmountedRef.current) return;
       setBatchPreview({
         phase: "preview",
@@ -2597,7 +2583,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("batch_slug_songs", { items });
+      const results = await safeInvoke<RenameResult[]>("batch_slug_songs", { items });
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2639,7 +2625,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("batch_strip_songs", { items, customWords: customWords() });
+      const results = await safeInvoke<RenameResult[]>("batch_strip_songs", { items, customWords: customWords() });
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2680,7 +2666,7 @@ function SongsPane({
       title: s.title || s.name || "",
     }));
     try {
-      const previews = await invoke<PreviewResult[]>("preview_slug", { items });
+      const previews = await safeInvoke<PreviewResult[]>("preview_slug", { items });
       if (unmountedRef.current) return;
       setBatchPreview({
         phase: "preview",
@@ -2706,7 +2692,7 @@ function SongsPane({
     }));
     const words = customWords();
     try {
-      const previews = await invoke<PreviewResult[]>("preview_strip", { items, customWords: words });
+      const previews = await safeInvoke<PreviewResult[]>("preview_strip", { items, customWords: words });
       if (unmountedRef.current) return;
       setBatchPreview({
         phase: "preview",
@@ -2732,7 +2718,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("batch_slug_all_songs");
+      const results = await safeInvoke<RenameResult[]>("batch_slug_all_songs");
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2773,7 +2759,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("batch_strip_all_songs", { customWords: customWords() });
+      const results = await safeInvoke<RenameResult[]>("batch_strip_all_songs", { customWords: customWords() });
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2817,7 +2803,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const previews = await invoke<PreviewResult[]>("preview_repair_encoding");
+      const previews = await safeInvoke<PreviewResult[]>("preview_repair_encoding");
       if (unmountedRef.current) return;
       if (previews.length === 0) {
         setBatchPreview(null);
@@ -2850,7 +2836,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("repair_all_songs_encoding");
+      const results = await safeInvoke<RenameResult[]>("repair_all_songs_encoding");
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2907,7 +2893,7 @@ function SongsPane({
       error: null,
     });
     try {
-      const results = await invoke<RenameResult[]>("repair_selected_encoding", { items });
+      const results = await safeInvoke<RenameResult[]>("repair_selected_encoding", { items });
       if (unmountedRef.current) return;
       const successCount = results.filter((r) => r.success).length;
       const failedCount = results.filter((r) => !r.success).length;
@@ -2942,32 +2928,35 @@ function SongsPane({
 
   return (
     <div className="pane">
-      <BatchToolbar
-        selectedCount={selected.size}
-        onSelectAll={selectAll}
-        onClearSelection={clearSelection}
-        onBatchDelete={batchDelete}
-        onBatchAddToPlaylist={batchAddToPlaylist}
-        onRefresh={loadSongs}
-        loading={deleting || loading}
-        showAddToPlaylist
-        batchMenuOpen={batchMenuOpen}
-        setBatchMenuOpen={setBatchMenuOpen}
-        onBatchSlugSelected={batchSlugSelected}
-        onBatchStripSelected={batchStripSelected}
-        onBatchSlugAll={batchSlugAll}
-        onBatchStripAll={batchStripAll}
-        onRepairAllEncoding={repairAllEncoding}
-        onRepairSelectedEncoding={batchRepairSelectedEncoding}
-      />
-      <FilterBar
-        search={search}
-        setSearch={setSearch}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        total={songs.length}
-        shown={filtered.length}
-      />
+      <div className="toolbar-row">
+        <BatchToolbar
+          selectedCount={selected.size}
+          onSelectAll={selectAll}
+          onClearSelection={clearSelection}
+          onBatchDelete={batchDelete}
+          onBatchAddToPlaylist={batchAddToPlaylist}
+          onRefresh={loadSongs}
+          loading={deleting || loading}
+          showAddToPlaylist
+          batchMenuOpen={batchMenuOpen}
+          setBatchMenuOpen={setBatchMenuOpen}
+          onBatchSlugSelected={batchSlugSelected}
+          onBatchStripSelected={batchStripSelected}
+          onBatchSlugAll={batchSlugAll}
+          onBatchStripAll={batchStripAll}
+          onRepairAllEncoding={repairAllEncoding}
+          onRepairSelectedEncoding={batchRepairSelectedEncoding}
+        />
+        <div className="toolbar-divider" />
+        <FilterBar
+          search={search}
+          setSearch={setSearch}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          total={songs.length}
+          shown={filtered.length}
+        />
+      </div>
       {loading && <div className="loading-text">加载中…</div>}
       {!loading && pageItems.length === 0 && (
         <div className="empty-text">{songs.length === 0 ? "暂无歌曲，拖拽 MP3 文件上传" : "无匹配项"}</div>
@@ -3030,8 +3019,6 @@ function SongsPane({
               <thead>
                 <tr>
                   <th className="col-title">标题</th>
-                  <th className="col-artist">艺术家</th>
-                  <th className="col-album">专辑</th>
                   <th className="col-time">时长</th>
                   <th className="col-size">大小</th>
                   <th className="col-bitrate">比特率</th>
@@ -3041,7 +3028,7 @@ function SongsPane({
               <tbody>
                 {/* 虚拟滚动：顶部占位行 */}
                 {virtual.offsetY > 0 && (
-                  <tr style={{ height: virtual.offsetY }} aria-hidden="true"><td colSpan={7} /></tr>
+                  <tr style={{ height: virtual.offsetY }} aria-hidden="true"><td colSpan={5} /></tr>
                 )}
                 {/* 只渲染可见行 */}
                 {pageItems.slice(virtual.startIndex, virtual.endIndex).map((s, vi) => {
@@ -3083,8 +3070,6 @@ function SongsPane({
                         <span className={`row-check ${isSelected ? "checked" : ""}`} />
                         {title}
                       </td>
-                      <td className="col-artist">{s.artist || "—"}</td>
-                      <td className="col-album">{s.album || "—"}</td>
                       <td className="col-time">{s.time > 0 ? formatTime(s.time) : "—"}</td>
                       <td className="col-size">{formatSize(s.size)}</td>
                       <td className="col-bitrate">{s.bit_rate > 0 ? `${s.bit_rate >> 7}kbps` : "—"}</td>
@@ -3098,7 +3083,7 @@ function SongsPane({
                 })}
                 {/* 虚拟滚动：底部占位行 */}
                 {virtual.totalHeight - virtual.offsetY - (virtual.endIndex - virtual.startIndex) * 28 > 0 && (
-                  <tr style={{ height: virtual.totalHeight - virtual.offsetY - (virtual.endIndex - virtual.startIndex) * 28 }} aria-hidden="true"><td colSpan={7} /></tr>
+                  <tr style={{ height: virtual.totalHeight - virtual.offsetY - (virtual.endIndex - virtual.startIndex) * 28 }} aria-hidden="true"><td colSpan={5} /></tr>
                 )}
               </tbody>
             </table>
@@ -3257,11 +3242,11 @@ function PlaylistsPane({
     try {
       const all: PlaylistInfo[] = [];
       try {
-        const internal = await invoke<PlaylistInfo[]>("list_playlists", { memUnit: 0 });
+        const internal = await safeInvoke<PlaylistInfo[]>("list_playlists", { memUnit: 0 });
         if (!unmountedRef.current) all.push(...internal.map((p) => ({ ...p, mem_unit: 0 })));
       } catch {}
       try {
-        const sd = await invoke<PlaylistInfo[]>("list_playlists", { memUnit: 1 });
+        const sd = await safeInvoke<PlaylistInfo[]>("list_playlists", { memUnit: 1 });
         if (!unmountedRef.current) all.push(...sd.map((p) => ({ ...p, mem_unit: 1 })));
       } catch {}
       if (unmountedRef.current) return;
@@ -3330,7 +3315,7 @@ function PlaylistsPane({
           const k = playlistKey(p);
           if (selected.has(k)) {
             try {
-              await invoke("delete_song", { fileNo: p.file_no, memUnit: p.mem_unit });
+              await safeInvoke("delete_song", { fileNo: p.file_no, memUnit: p.mem_unit });
               okCount++;
             } catch {
               failCount++;
@@ -3359,24 +3344,27 @@ function PlaylistsPane({
 
   return (
     <div className="pane">
-      <BatchToolbar
-        selectedCount={selected.size}
-        onSelectAll={selectAll}
-        onClearSelection={clearSelection}
-        onBatchDelete={batchDelete}
-        onBatchAddToPlaylist={async () => {}}
-        onRefresh={loadPlaylists}
-        loading={deleting || loading}
-        showAddToPlaylist={false}
-      />
-      <FilterBar
-        search={search}
-        setSearch={setSearch}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        total={playlists.length}
-        shown={filtered.length}
-      />
+      <div className="toolbar-row">
+        <BatchToolbar
+          selectedCount={selected.size}
+          onSelectAll={selectAll}
+          onClearSelection={clearSelection}
+          onBatchDelete={batchDelete}
+          onBatchAddToPlaylist={async () => {}}
+          onRefresh={loadPlaylists}
+          loading={deleting || loading}
+          showAddToPlaylist={false}
+        />
+        <div className="toolbar-divider" />
+        <FilterBar
+          search={search}
+          setSearch={setSearch}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          total={playlists.length}
+          shown={filtered.length}
+        />
+      </div>
       {loading && <div className="loading-text">加载中…</div>}
       {!loading && pageItems.length === 0 && (
         <div className="empty-text">{playlists.length === 0 ? "暂无歌单" : "无匹配项"}</div>
@@ -3483,7 +3471,7 @@ function CreatePlaylistModal({
     if (!name.trim()) return;
     setCreating(true);
     try {
-      await invoke("create_playlist", { name: name.trim(), memUnit });
+      await safeInvoke("create_playlist", { name: name.trim(), memUnit });
       onError(`歌单 "${name.trim()}" 已创建`);
       onCreated();
     } catch (e) {
@@ -3556,7 +3544,7 @@ function PlaylistDetail({
     setLoading(true);
     onError(null);
     try {
-      const result = await invoke<SongInfo[]>("list_playlist_songs", {
+      const result = await safeInvoke<SongInfo[]>("list_playlist_songs", {
         playlistFileNo: playlist.file_no,
         memUnit: playlist.mem_unit,
       });
@@ -3590,7 +3578,6 @@ function PlaylistDetail({
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
             <path d="M9 1 L3 7 L9 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
-          <span>返回</span>
         </button>
         <h2>{title}</h2>
         <span className={`mem-badge mem-${playlist.mem_unit}`}>
@@ -3607,7 +3594,6 @@ function PlaylistDetail({
             <thead>
               <tr>
                 <th className="col-title">标题</th>
-                <th className="col-artist">艺术家</th>
                 <th className="col-time">时长</th>
                 <th className="col-size">大小</th>
                 <th className="col-mem">存储</th>
@@ -3626,7 +3612,6 @@ function PlaylistDetail({
                     }}
                   >
                     <td className="col-title">{t}</td>
-                    <td className="col-artist">{s.artist || "—"}</td>
                     <td className="col-time">{s.time > 0 ? formatTime(s.time) : "—"}</td>
                     <td className="col-size">{formatSize(s.size)}</td>
                     <td className="col-mem">
@@ -3658,7 +3643,7 @@ function PlaylistDetail({
         onRename={(s) => setRenameTarget(s)}
         onRepairEncoding={async (s) => {
           try {
-            await invoke("repair_song_encoding", {
+            await safeInvoke("repair_song_encoding", {
               fileNo: s.file_no,
               memUnit: s.mem_unit,
             });
@@ -3701,9 +3686,9 @@ function DeviceInfoPane({
     setLoading(true);
     setError(null);
     try {
-      const i = await invoke<StorageInfo>("get_storage", { memUnit: 0 });
+      const i = await safeInvoke<StorageInfo>("get_storage", { memUnit: 0 });
       setInternal(i);
-      const s = await invoke<StorageInfo>("get_storage", { memUnit: 1 }).catch(() => null);
+      const s = await safeInvoke<StorageInfo>("get_storage", { memUnit: 1 }).catch(() => null);
       setSd(s);
     } catch (e) {
       setError(`加载失败: ${e}`);
@@ -4146,7 +4131,7 @@ function RenameModal({
     }
     setSubmitting(true);
     try {
-      await invoke("rename_song", {
+      await safeInvoke("rename_song", {
         fileNo: song.file_no,
         memUnit: song.mem_unit,
         newTitle: trimmed,
@@ -4445,7 +4430,7 @@ function PlayerBar({
   useEffect(() => {
     const timer = setInterval(async () => {
       try {
-        const state = await invoke<PlaybackState>("get_playback_state");
+        const state = await safeInvoke<PlaybackState>("get_playback_state");
         setIsPlaying(state.is_playing);
         setPosition(state.position);
         setDuration(state.duration);
@@ -4461,9 +4446,9 @@ function PlayerBar({
   async function togglePlay() {
     try {
       if (isPlaying) {
-        await invoke("pause_audio");
+        await safeInvoke("pause_audio");
       } else {
-        await invoke("resume_audio");
+        await safeInvoke("resume_audio");
       }
     } catch {}
   }
@@ -4497,7 +4482,7 @@ function PlayerBar({
         </button>
         <button
           className="player-btn"
-          onClick={() => invoke("stop_audio").catch(() => {})}
+          onClick={() => safeInvoke("stop_audio").catch(() => {})}
           title="停止"
           aria-label="停止"
           disabled={isLoading}
@@ -4537,7 +4522,7 @@ function SongDetailModal({
   useEffect(() => {
     setLoading(true);
     setCoverUrl(null);
-    invoke<SongDetail>("get_song_detail", { fileNo: song.file_no, memUnit: song.mem_unit })
+    safeInvoke<SongDetail>("get_song_detail", { fileNo: song.file_no, memUnit: song.mem_unit })
       .then((d) => {
         setDetail(d);
         if (d.cover_art && d.cover_art.length > 0) {
@@ -4671,7 +4656,7 @@ function SyncPane({
   const loadRules = useCallback(async () => {
     setLoading(true);
     try {
-      setRules(await invoke<SyncRule[]>("list_sync_rules"));
+      setRules(await safeInvoke<SyncRule[]>("list_sync_rules"));
     } catch (e) {
       onError(`加载同步规则失败: ${e}`);
     }
@@ -4685,7 +4670,7 @@ function SyncPane({
   async function runSync(rule: SyncRule) {
     setSyncing(rule.id);
     try {
-      const result = await invoke<SyncResult>("run_sync", { ruleId: rule.id });
+      const result = await safeInvoke<SyncResult>("run_sync", { ruleId: rule.id });
       onError(`同步完成：新增 ${result.added.length}，删除 ${result.deleted.length}，跳过 ${result.skipped.length}${result.errors.length > 0 ? `，失败 ${result.errors.length}` : ""}`);
       await loadRules();
       await onRefreshStorage();
@@ -4702,7 +4687,7 @@ function SyncPane({
       danger: true,
       onConfirm: async () => {
         try {
-          await invoke("delete_sync_rule", { id });
+          await safeInvoke("delete_sync_rule", { id });
           await loadRules();
         } catch (e) {
           onError(`删除规则失败: ${e}`);
@@ -4821,7 +4806,7 @@ function AddSyncRuleModal({
     if (!localPath.trim()) return;
     setCreating(true);
     try {
-      await invoke("add_sync_rule", {
+      await safeInvoke("add_sync_rule", {
         localPath: localPath.trim(),
         memUnit,
         playlistFileNo,
