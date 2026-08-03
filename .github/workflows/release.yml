@@ -50,49 +50,42 @@ jobs:
         run: cargo build --release -p cyrio-tauri
 
       - name: Rename binary
-        run: |
-          cp target/release/cyrio-tauri target/release/cyrio-tauri_${{ github.event.inputs.tag }}_linux-x86_64
+        run: cp target/release/cyrio-tauri target/release/cyrio-tauri_${{ github.event.inputs.tag }}_linux-x86_64
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-x86_64
-          path: target/release/cyrio-tauri_${{ github.event.inputs.tag }}_linux-x86_64
-
-  create-release:
-    needs: [build-linux]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Create release
+      - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
-          name: ${{ github.event.inputs.tag }} - 全平台桌面版 + Android
-          body: |
-            ## 更新内容
+          files: target/release/cyrio-tauri_${{ github.event.inputs.tag }}_linux-x86_64
 
-            - 新增演示模式（无需连接设备即可预览全部功能）
-            - 优化顶部栏为纯文本选项卡紧凑布局
-            - 修复刷新按钮文字换行问题
-            - 歌单详情返回按钮改为纯图标
-            - 更新 README 文档（截图展示 + 软件优势）
-            - 补充演示模式 mock 数据覆盖全部 API 命令
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            ## 下载
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
-            | 文件 | 平台 |
-            |------|------|
-            | `*_macos-arm64.dmg` | macOS Apple Silicon |
-            | `*_macos-x86_64.dmg` | macOS Intel |
-            | `*_windows-x86_64.exe` | Windows x86_64 |
-            | `*_linux-x86_64` | Linux x86_64 |
-            | `*_arm64-v8a.apk` | Android arm64 |
-          files: artifacts/**/*
-          prerelease: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build frontend
+        working-directory: platforms/tauri-desktop/frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Build Tauri binary
+        run: cargo build --release -p cyrio-tauri
+
+      - name: Rename binary
+        shell: bash
+        run: cp target/release/cyrio-tauri.exe target/release/cyrio-tauri_${{ github.event.inputs.tag }}_windows-x86_64.exe
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          files: target/release/cyrio-tauri_${{ github.event.inputs.tag }}_windows-x86_64.exe
